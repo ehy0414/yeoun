@@ -8,7 +8,7 @@ export default function Header({ currentPage, onPageChange }: HeaderProps) {
     <header className="bg-white border-b border-pink-100 px-6 py-4 shadow-sm">
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         {/* Logo */}
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center space-x-2 cursor-pointer">
           <div className="w-10 h-10 bg-gradient-to-br from-pink-400 to-pink-500 rounded-xl flex items-center justify-center">
             <span className="text-white">📖</span>
           </div>
@@ -19,7 +19,7 @@ export default function Header({ currentPage, onPageChange }: HeaderProps) {
         <nav className="flex items-center space-x-8">
           <button
             onClick={() => onPageChange('write')}
-            className={`px-4 py-2 rounded-lg transition-colors ${
+            className={`cursor-pointer px-4 py-2 rounded-lg transition-colors ${
               currentPage === 'write'
                 ? 'bg-pink-100 text-pink-600'
                 : 'text-gray-600 hover:text-pink-600 hover:bg-pink-50'
@@ -29,7 +29,7 @@ export default function Header({ currentPage, onPageChange }: HeaderProps) {
           </button>
           <button
             onClick={() => onPageChange('calendar')}
-            className={`px-4 py-2 rounded-lg transition-colors ${
+            className={`cursor-pointer px-4 py-2 rounded-lg transition-colors ${
               currentPage === 'calendar'
                 ? 'bg-pink-100 text-pink-600'
                 : 'text-gray-600 hover:text-pink-600 hover:bg-pink-50'
@@ -39,7 +39,7 @@ export default function Header({ currentPage, onPageChange }: HeaderProps) {
           </button>
           <button
             onClick={() => onPageChange('today-writers')}
-            className={`px-4 py-2 rounded-lg transition-colors ${
+            className={`cursor-pointer px-4 py-2 rounded-lg transition-colors ${
               currentPage === 'today-writers'
                 ? 'bg-pink-100 text-pink-600'
                 : 'text-gray-600 hover:text-pink-600 hover:bg-pink-50'
