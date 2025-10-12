@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom"
 
-export default function Header() {
+export default function HomeHeader() {
     const navigate = useNavigate();
     const onBack = () => {
         navigate(-1);
