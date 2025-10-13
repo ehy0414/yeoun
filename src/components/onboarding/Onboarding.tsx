@@ -56,7 +56,7 @@ export default function Onboarding({ onStartWriting }: OnboardingProps) {
         {/* CTA Button */}
         <button
           onClick={onStartWriting}
-          className="bg-gradient-to-r from-pink-400 to-pink-500 text-white px-8 py-4 rounded-xl hover:from-pink-500 hover:to-pink-600 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
+          className="cursor-pointer bg-gradient-to-r from-pink-400 to-pink-500 text-white px-8 py-4 rounded-xl hover:from-pink-500 hover:to-pink-600 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
         >
           오늘의 일기 작성하기
         </button>

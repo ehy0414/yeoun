@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import HomeHeader from '../layout/header/HomeHeader';
 
 interface DiaryEntry {
   id: string;
@@ -75,12 +76,7 @@ export default function Calendar({ entries, onBack }: CalendarProps) {
       <div className="max-w-6xl mx-auto px-6 py-8">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
-          <button
-            onClick={onBack}
-            className="text-gray-600 hover:text-pink-600 transition-colors"
-          >
-            ← 돌아가기
-          </button>
+          <HomeHeader />
           <h2 className="text-2xl text-gray-800">일기 캘린더</h2>
           <div className="w-20"></div>
         </div>

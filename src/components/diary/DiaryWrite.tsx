@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import Header from '../layout/header/HomeHeader';
+import HomeHeader from '../layout/header/HomeHeader';
 
 interface DiaryEntry {
   id: string;
@@ -76,12 +78,7 @@ export default function DiaryWrite({ onSave, onBack }: DiaryWriteProps) {
       <div className="max-w-4xl mx-auto px-6 py-8">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
-          <button
-            onClick={onBack}
-            className="text-gray-600 hover:text-pink-600 transition-colors"
-          >
-            ← 돌아가기
-          </button>
+          <HomeHeader />
           <div className="text-center">
             <h2 className="text-pink-600 mb-1">오늘의 일기</h2>
             <p className="text-sm text-gray-500">{today}</p>
@@ -104,7 +101,7 @@ export default function DiaryWrite({ onSave, onBack }: DiaryWriteProps) {
                     <button
                       key={moodOption.emoji}
                       onClick={() => setMood(moodOption.emoji)}
-                      className={`p-2 rounded-lg transition-all ${
+                      className={`p-2 rounded-lg transition-all cursor-pointer ${
                         mood === moodOption.emoji
                           ? 'bg-pink-100 scale-110'
                           : 'hover:bg-pink-50'
@@ -160,7 +157,7 @@ export default function DiaryWrite({ onSave, onBack }: DiaryWriteProps) {
               <button
                 onClick={handleSave}
                 disabled={isAnalyzing}
-                className="bg-gradient-to-r from-pink-400 to-pink-500 hover:from-pink-500 hover:to-pink-600 text-white px-8 py-3 rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="z-0 cursor-pointer bg-gradient-to-r from-pink-400 to-pink-500 hover:from-pink-500 hover:to-pink-600 text-white px-8 py-3 rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isAnalyzing ? (
                   <span className="flex items-center space-x-2">

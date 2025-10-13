@@ -1,3 +1,5 @@
+import HomeHeader from "../layout/header/HomeHeader";
+
 interface TodayWritersProps {
   onBack: () => void;
 }
@@ -69,12 +71,7 @@ export default function TodayWriters({ onBack }: TodayWritersProps) {
       <div className="max-w-4xl mx-auto px-6 py-8">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
-          <button
-            onClick={onBack}
-            className="text-gray-600 hover:text-pink-600 transition-colors"
-          >
-            ← 돌아가기
-          </button>
+          <HomeHeader />
           <div className="text-center">
             <h2 className="text-2xl text-gray-800 mb-1">오늘 작성한 사람들</h2>
             <p className="text-sm text-gray-500">{today}</p>
