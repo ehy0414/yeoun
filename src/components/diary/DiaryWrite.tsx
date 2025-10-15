@@ -144,7 +144,13 @@ export default function DiaryWrite({ onSave, onBack }: DiaryWriteProps) {
                 placeholder="오늘 하루는 어떠셨나요? 당신의 여운을 자유롭게 적어보세요..."
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
-                className="relative z-10 min-h-96 bg-transparent border-none resize-none outline-none placeholder-gray-400 text-gray-700 leading-6"
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault();
+                    setContent(prev => prev + '\n\n');
+                  }
+                }}
+                className="relative w-full z-10 min-h-96 bg-transparent border-none resize-none outline-none placeholder-gray-400 text-gray-700 leading-6"
                 style={{ 
                   fontFamily: '"Noto Sans KR", sans-serif',
                   lineHeight: '1.5rem'
