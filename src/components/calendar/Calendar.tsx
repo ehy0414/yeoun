@@ -76,9 +76,7 @@ export default function Calendar({ entries, onBack }: CalendarProps) {
       <div className="max-w-6xl mx-auto px-6 py-8">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
-          <HomeHeader />
-          <h2 className="text-2xl text-gray-800">일기 캘린더</h2>
-          <div className="w-20"></div>
+          <h2 className="text-2xl mx-auto text-gray-800">일기 캘린더</h2>
         </div>
 
         <div className="grid lg:grid-cols-3 gap-8">

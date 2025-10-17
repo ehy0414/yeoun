@@ -78,12 +78,10 @@ export default function DiaryWrite({ onSave, onBack }: DiaryWriteProps) {
       <div className="max-w-4xl mx-auto px-6 py-8">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
-          <HomeHeader />
-          <div className="text-center">
+          <div className="text-center mx-auto">
             <h2 className="text-pink-600 mb-1">오늘의 일기</h2>
             <p className="text-sm text-gray-500">{today}</p>
           </div>
-          <div className="w-20"></div>
         </div>
 
         {/* Diary Book Design */}
