@@ -89,7 +89,7 @@ export default function Calendar({ entries, onBack }: CalendarProps) {
               <div className="flex items-center justify-between mb-6">
                 <button
                   onClick={previousMonth}
-                  className="border-pink-200 text-pink-600 hover:bg-pink-50"
+                  className="border-pink-200 text-pink-600 hover:bg-pink-50 cursor-pointer"
                 >
                   ←
                 </button>
@@ -98,7 +98,7 @@ export default function Calendar({ entries, onBack }: CalendarProps) {
                 </h3>
                 <button
                   onClick={nextMonth}
-                  className="border-pink-200 text-pink-600 hover:bg-pink-50"
+                  className="border-pink-200 text-pink-600 hover:bg-pink-50 cursor-pointer"
                 >
                   →
                 </button>
