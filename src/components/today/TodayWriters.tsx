@@ -88,7 +88,7 @@ export default function TodayWriters({ onBack }: TodayWritersProps) {
               <div className="text-3xl text-pink-600 mb-2">
                 {mockWriters.reduce((sum, writer) => sum + writer.likeCount, 0)}
               </div>
-              <div className="text-sm text-gray-600">총 좋아요</div>
+              <div className="text-sm text-gray-600">오늘 좋아요를 누른 사람</div>
             </div>
             <div>
               <div className="text-3xl text-pink-600 mb-2">
@@ -100,11 +100,10 @@ export default function TodayWriters({ onBack }: TodayWritersProps) {
         </div>
 
         {/* Writers List */}
-        <div className="space-y-6">
+        {/* <div className="space-y-6">
           {mockWriters.map((writer) => (
             <div key={writer.id} className="p-6 bg-white shadow-lg border border-pink-100 hover:shadow-xl transition-shadow">
               <div className="flex items-start space-x-4">
-                {/* Avatar */}
                 <img
                   src={writer.avatar}
                   alt={writer.name}
@@ -112,7 +111,6 @@ export default function TodayWriters({ onBack }: TodayWritersProps) {
                 />
 
                 <div className="flex-1 min-w-0">
-                  {/* Header */}
                   <div className="flex items-center justify-between mb-2">
                     <div className="flex items-center space-x-3">
                       <h3 className="text-gray-800">{writer.name}</h3>
@@ -125,15 +123,12 @@ export default function TodayWriters({ onBack }: TodayWritersProps) {
                     </div>
                   </div>
 
-                  {/* Title */}
                   <h4 className="text-gray-800 mb-2">{writer.title}</h4>
 
-                  {/* Preview */}
                   <p className="text-gray-600 text-sm leading-relaxed mb-4">
                     {writer.preview}
                   </p>
 
-                  {/* Actions */}
                   <div className="flex items-center space-x-4 text-sm">
                     <button className="flex items-center space-x-1 text-pink-600 hover:text-pink-700 transition-colors">
                       <span>❤️</span>
@@ -152,14 +147,7 @@ export default function TodayWriters({ onBack }: TodayWritersProps) {
               </div>
             </div>
           ))}
-        </div>
-
-        {/* Load More */}
-        <div className="text-center mt-8">
-          <button className="bg-white border border-pink-200 text-pink-600 px-6 py-3 rounded-xl hover:bg-pink-50 transition-colors shadow-md">
-            더 많은 일기 보기
-          </button>
-        </div>
+        </div> */}
 
         {/* Encouragement */}
         <div className="mt-12 text-center">

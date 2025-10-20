@@ -85,9 +85,9 @@ export default function HomePage() {
         />
       )}
       
-      {/* {currentPage === 'today-writers' && (
+      {currentPage === 'today-writers' && (
         <TodayWriters onBack={handleBackToMain} />
-      )} */}
+      )}
     </div>
   );
 }
