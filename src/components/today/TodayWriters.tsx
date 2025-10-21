@@ -67,7 +67,7 @@ export default function TodayWriters({ onBack }: TodayWritersProps) {
   });
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-pink-50 to-white">
+    <main className="min-h-screen bg-gradient-to-br from-pink-50 to-white">
       <div className="max-w-4xl mx-auto px-6 py-8">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
@@ -166,6 +166,6 @@ export default function TodayWriters({ onBack }: TodayWritersProps) {
           </div>
         </div>
       </div>
-    </div>
+    </main>
   );
 }

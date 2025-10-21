@@ -4,7 +4,7 @@ interface OnboardingProps {
 
 export default function Onboarding({ onStartWriting }: OnboardingProps) {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-pink-50 to-white flex items-center justify-center px-6">
+    <main className="min-h-screen bg-gradient-to-br from-pink-50 to-white flex items-center justify-center px-6">
       <div className="max-w-2xl mx-auto text-center">
         {/* Hero Image */}
         <div className="mb-8">
@@ -61,6 +61,6 @@ export default function Onboarding({ onStartWriting }: OnboardingProps) {
           오늘의 일기 작성하기
         </button>
       </div>
-    </div>
+    </main>
   );
 }
