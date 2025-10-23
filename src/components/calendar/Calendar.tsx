@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import HomeHeader from '../layout/header/HomeHeader';
 
 interface DiaryEntry {
   id: string;

@@ -1,5 +1,3 @@
-import HomeHeader from "../layout/header/HomeHeader";
-
 interface TodayWritersProps {
   onBack: () => void;
 }
