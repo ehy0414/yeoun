@@ -238,7 +238,7 @@ export default function Calendar({ entries, onBack }: CalendarProps) {
           </div>
           <div className="p-4 bg-white shadow-lg border border-pink-100 text-center">
             <div className="text-2xl text-pink-600 mb-2">
-              {entries.filter(entry => entry.date === today.toISOString().split('T')[0]).length > 0 ? '✓' : '○'}
+              {entries.filter(entry => entry.date === today.toISOString().split('T')[0]).length > 0 ? '✓' : 'X'}
             </div>
             <div className="text-sm text-gray-600">오늘 작성 여부</div>
           </div>

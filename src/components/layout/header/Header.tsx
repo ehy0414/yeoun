@@ -37,7 +37,7 @@ export default function Header({ currentPage, onPageChange }: HeaderProps) {
           >
             캘린더
           </button>
-          <button
+          {/* <button
             onClick={() => onPageChange('today-writers')}
             className={`cursor-pointer px-4 py-2 rounded-lg transition-colors ${
               currentPage === 'today-writers'
@@ -46,7 +46,7 @@ export default function Header({ currentPage, onPageChange }: HeaderProps) {
             }`}
           >
             오늘 작성한 사람
-          </button>
+          </button> */}
         </nav>
 
         {/* Profile */}
