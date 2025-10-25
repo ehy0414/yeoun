@@ -11,10 +11,9 @@ interface DiaryEntry {
 
 interface CalendarProps {
   entries: DiaryEntry[];
-  onBack: () => void;
 }
 
-export default function Calendar({ entries, onBack }: CalendarProps) {
+export default function Calendar({ entries }: CalendarProps) {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedEntry, setSelectedEntry] = useState<DiaryEntry | null>(null);
 
@@ -202,7 +201,7 @@ export default function Calendar({ entries, onBack }: CalendarProps) {
 
                 <button
                   onClick={() => setSelectedEntry(null)}
-                  className="mt-4 w-full text-sm text-pink-600 hover:text-pink-700 transition-colors"
+                  className="mt-4 cursor-pointer w-full text-sm text-pink-600 hover:text-pink-700 hover:bg-pink-100 h-10 rounded-2xl transition-colors"
                 >
                   닫기
                 </button>
