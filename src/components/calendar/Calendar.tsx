@@ -17,50 +17,31 @@ export default function Calendar({ entries }: CalendarProps) {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedEntry, setSelectedEntry] = useState<DiaryEntry | null>(null);
 
-  // Get current month details
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth();
   const today = new Date();
   
-  // Get first day of month and number of days
   const firstDay = new Date(year, month, 1);
   const lastDay = new Date(year, month + 1, 0);
   const daysInMonth = lastDay.getDate();
   const startingDayOfWeek = firstDay.getDay();
 
-  // Create calendar grid
   const calendarDays = [];
-  
-  // Empty cells for days before month starts
-  for (let i = 0; i < startingDayOfWeek; i++) {
-    calendarDays.push(null);
-  }
-  
-  // Days of the month
-  for (let day = 1; day <= daysInMonth; day++) {
-    calendarDays.push(day);
-  }
+  for (let i = 0; i < startingDayOfWeek; i++) calendarDays.push(null);
+  for (let day = 1; day <= daysInMonth; day++) calendarDays.push(day);
 
-  // Check if a day has an entry
   const hasEntry = (day: number) => {
     const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
     return entries.some(entry => entry.date === dateStr);
   };
 
-  // Get entry for a specific day
   const getEntry = (day: number) => {
     const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
     return entries.find(entry => entry.date === dateStr);
   };
 
-  // Navigation functions
-  const previousMonth = () => {
-    setCurrentDate(new Date(year, month - 1));
-  };
-
-  const nextMonth = () => {
-    setCurrentDate(new Date(year, month + 1));
-  };
+  const previousMonth = () => setCurrentDate(new Date(year, month - 1));
+  const nextMonth = () => setCurrentDate(new Date(year, month + 1));
 
   const monthNames = [
     '1월', '2월', '3월', '4월', '5월', '6월',
@@ -70,30 +51,32 @@ export default function Calendar({ entries }: CalendarProps) {
   const dayNames = ['일', '월', '화', '수', '목', '금', '토'];
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-pink-50 to-white">
+    <main className="min-h-screen bg-gradient-to-br from-pink-50 to-white" role="main">
       <div className="max-w-6xl mx-auto px-6 py-8">
         {/* Header */}
-        <div className="flex items-center justify-between mb-8">
-          <h2 className="text-2xl mx-auto text-gray-800">일기 캘린더</h2>
-        </div>
+        <header className="flex items-center justify-between mb-8" role="banner">
+          <h1 className="text-2xl mx-auto text-gray-800">일기 캘린더</h1>
+        </header>
 
-        <div className="grid lg:grid-cols-3 gap-8">
+        <section className="grid lg:grid-cols-3 gap-8" aria-label="달력과 일기 상세보기">
           {/* Calendar */}
-          <div className="lg:col-span-2">
+          <section className="lg:col-span-2" aria-label="달력">
             <div className="p-6 bg-white shadow-lg border border-pink-100">
               {/* Calendar Header */}
               <div className="flex items-center justify-between mb-6">
                 <button
                   onClick={previousMonth}
+                  aria-label="이전 달 보기"
                   className="border-pink-200 text-pink-600 hover:bg-pink-50 cursor-pointer"
                 >
                   ←
                 </button>
-                <h3 className="text-xl text-gray-800">
-                  {year}년 {monthNames[month]}
-                </h3>
+                <h2 className="text-xl text-gray-800" id="calendar-title">
+                  <time dateTime={`${year}-${month + 1}`}>{year}년 {monthNames[month]}</time>
+                </h2>
                 <button
                   onClick={nextMonth}
+                  aria-label="다음 달 보기"
                   className="border-pink-200 text-pink-600 hover:bg-pink-50 cursor-pointer"
                 >
                   →
@@ -101,10 +84,11 @@ export default function Calendar({ entries }: CalendarProps) {
               </div>
 
               {/* Day Headers */}
-              <div className="grid grid-cols-7 gap-1 mb-2">
+              <div className="grid grid-cols-7 gap-1 mb-2" role="rowgroup">
                 {dayNames.map(day => (
                   <div
                     key={day}
+                    role="columnheader"
                     className="text-center py-2 text-sm text-gray-600"
                   >
                     {day}
@@ -113,10 +97,18 @@ export default function Calendar({ entries }: CalendarProps) {
               </div>
 
               {/* Calendar Grid */}
-              <div className="grid grid-cols-7 gap-1">
+              <div className="grid grid-cols-7 gap-1" role="rowgroup" aria-labelledby="calendar-title">
                 {calendarDays.map((day, index) => (
-                  <div
+                  <button
                     key={index}
+                    type="button"
+                    role="gridcell"
+                    aria-label={
+                      day
+                        ? `${year}년 ${month + 1}월 ${day}일 ${hasEntry(day) ? '일기 있음' : '일기 없음'}`
+                        : undefined
+                    }
+                    disabled={!day}
                     className={`
                       relative aspect-square border border-pink-100 rounded-lg flex flex-col items-center justify-center cursor-pointer transition-all
                       ${day ? 'hover:bg-pink-50' : ''}
@@ -132,84 +124,91 @@ export default function Calendar({ entries }: CalendarProps) {
                   >
                     {day && (
                       <>
-                        <span className={`text-sm ${hasEntry(day) ? 'text-pink-700' : 'text-gray-700'}`}>
+                        <time
+                          dateTime={`${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`}
+                          className={`text-sm ${hasEntry(day) ? 'text-pink-700' : 'text-gray-700'}`}
+                        >
                           {day}
-                        </span>
+                        </time>
                         {hasEntry(day) && (
-                          <div className="absolute bottom-1">
+                          <div className="absolute bottom-1" aria-hidden="true">
                             <span className="text-lg">{getEntry(day)?.mood}</span>
                           </div>
                         )}
                       </>
                     )}
-                  </div>
+                  </button>
                 ))}
               </div>
 
               {/* Legend */}
-              <div className="mt-6 flex items-center justify-center space-x-6 text-sm text-gray-600">
+              <footer className="mt-6 flex items-center justify-center space-x-6 text-sm text-gray-600" role="contentinfo">
                 <div className="flex items-center space-x-2">
-                  <div className="w-4 h-4 border-2 border-pink-500 rounded"></div>
+                  <div className="w-4 h-4 border-2 border-pink-500 rounded" aria-hidden="true"></div>
                   <span>오늘</span>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <div className="w-4 h-4 bg-pink-100 border border-pink-300 rounded"></div>
+                  <div className="w-4 h-4 bg-pink-100 border border-pink-300 rounded" aria-hidden="true"></div>
                   <span>일기 작성됨</span>
                 </div>
-              </div>
+              </footer>
             </div>
-          </div>
+          </section>
 
           {/* Entry Details */}
-          <div className="lg:col-span-1">
+          <aside className="lg:col-span-1" aria-live="polite">
             {selectedEntry ? (
-              <div className="p-6 bg-white shadow-lg border border-pink-100">
-                <div className="mb-4">
+              <article className="p-6 bg-white shadow-lg border border-pink-100" aria-label="선택된 일기 내용">
+                <header className="mb-4">
                   <div className="flex items-center justify-between mb-2">
-                    <h4 className="text-lg text-gray-800">{selectedEntry.title}</h4>
-                    <span className="text-2xl">{selectedEntry.mood}</span>
+                    <h3 className="text-lg text-gray-800">{selectedEntry.title}</h3>
+                    <span className="text-2xl" aria-hidden="true">{selectedEntry.mood}</span>
                   </div>
-                  <p className="text-sm text-gray-500">
+                  <time
+                    dateTime={selectedEntry.date}
+                    className="text-sm text-gray-500"
+                  >
                     {new Date(selectedEntry.date).toLocaleDateString('ko-KR', {
                       year: 'numeric',
                       month: 'long',
                       day: 'numeric',
                       weekday: 'long'
                     })}
-                  </p>
-                </div>
+                  </time>
+                </header>
 
-                <div className="mb-6">
-                  <h5 className="text-sm text-gray-600 mb-2">내용</h5>
+                <section className="mb-6">
+                  <h4 className="text-sm text-gray-600 mb-2">내용</h4>
                   <p className="text-gray-700 text-sm leading-relaxed bg-pink-50 p-3 rounded-lg">
                     {selectedEntry.content.substring(0, 200)}
                     {selectedEntry.content.length > 200 && '...'}
                   </p>
-                </div>
+                </section>
 
                 {selectedEntry.aiAnalysis && (
-                  <div>
-                    <h5 className="text-sm text-gray-600 mb-2 flex items-center">
-                      <span className="mr-2">🤖</span>
+                  <section>
+                    <h4 className="text-sm text-gray-600 mb-2 flex items-center">
+                      <span className="mr-2" aria-hidden="true">🤖</span>
                       AI 분석
-                    </h5>
+                    </h4>
                     <p className="text-gray-700 text-sm leading-relaxed bg-gradient-to-br from-pink-50 to-purple-50 p-3 rounded-lg border border-pink-200">
                       {selectedEntry.aiAnalysis}
                     </p>
-                  </div>
+                  </section>
                 )}
 
                 <button
                   onClick={() => setSelectedEntry(null)}
                   className="mt-4 cursor-pointer w-full text-sm text-pink-600 hover:text-pink-700 hover:bg-pink-100 h-10 rounded-2xl transition-colors"
+                  aria-label="일기 상세보기 닫기"
                 >
                   닫기
                 </button>
-              </div>
+              </article>
             ) : (
-              <div className="p-6 bg-white shadow-lg border border-pink-100">
+              <div className="p-6 bg-white shadow-lg border border-pink-100" role="note">
                 <div className="text-center text-gray-500">
-                  <div className="text-4xl mb-4">📅</div>
+                  <div className="text-4xl mb-4" aria-hidden="true">📅</div>
                   <p className="text-sm">
                     일기가 작성된 날짜를 클릭하면<br />
                     자세한 내용을 볼 수 있어요
@@ -217,16 +216,16 @@ export default function Calendar({ entries }: CalendarProps) {
                 </div>
               </div>
             )}
-          </div>
-        </div>
+          </aside>
+        </section>
 
         {/* Stats */}
-        <div className="mt-8 grid md:grid-cols-3 gap-6">
-          <div className="p-4 bg-white shadow-lg border border-pink-100 text-center">
+        <section className="mt-8 grid md:grid-cols-3 gap-6" aria-label="통계 정보">
+          <div className="p-4 bg-white shadow-lg border border-pink-100 text-center" role="status">
             <div className="text-2xl text-pink-600 mb-2">{entries.length}</div>
             <div className="text-sm text-gray-600">총 작성한 일기</div>
           </div>
-          <div className="p-4 bg-white shadow-lg border border-pink-100 text-center">
+          <div className="p-4 bg-white shadow-lg border border-pink-100 text-center" role="status">
             <div className="text-2xl text-pink-600 mb-2">
               {entries.filter(entry => 
                 new Date(entry.date).getMonth() === month && 
@@ -235,13 +234,13 @@ export default function Calendar({ entries }: CalendarProps) {
             </div>
             <div className="text-sm text-gray-600">이번 달 작성</div>
           </div>
-          <div className="p-4 bg-white shadow-lg border border-pink-100 text-center">
+          <div className="p-4 bg-white shadow-lg border border-pink-100 text-center" role="status">
             <div className="text-2xl text-pink-600 mb-2">
-              {entries.filter(entry => entry.date === today.toISOString().split('T')[0]).length > 0 ? '✓' : 'X'}
+              {entries.some(entry => entry.date === today.toISOString().split('T')[0]) ? '✓' : 'X'}
             </div>
             <div className="text-sm text-gray-600">오늘 작성 여부</div>
           </div>
-        </div>
+        </section>
       </div>
     </main>
   );
