@@ -38,11 +38,13 @@ export default function DiaryWrite({ onSave, onBack }: DiaryWriteProps) {
     }
 
     setIsAnalyzing(true);
-    
-    // Mock AI analysis (실제로는 API 호출)
+
+    // Mock AI analysis
     await new Promise(resolve => setTimeout(resolve, 2000));
-    
-    const mockAnalysis = `오늘의 일기를 분석한 결과, 전반적으로 ${mood === '😊' ? '긍정적인' : mood === '😢' ? '우울한' : '혼재된'} 감정이 느껴집니다. 
+
+    const mockAnalysis = `오늘의 일기를 분석한 결과, 전반적으로 ${
+      mood === '😊' ? '긍정적인' : mood === '😢' ? '우울한' : '혼재된'
+    } 감정이 느껴집니다. 
     특히 일상의 소소한 행복을 찾으려는 모습이 인상적이었습니다. 
     앞으로도 이런 긍정적인 마음가짐을 유지하시길 바랍니다.`;
 
@@ -57,8 +59,6 @@ export default function DiaryWrite({ onSave, onBack }: DiaryWriteProps) {
 
     onSave(newEntry);
     setIsAnalyzing(false);
-    
-    // Reset form
     setTitle('');
     setContent('');
     setMood('😊');
@@ -68,56 +68,78 @@ export default function DiaryWrite({ onSave, onBack }: DiaryWriteProps) {
     year: 'numeric',
     month: 'long',
     day: 'numeric',
-    weekday: 'long'
+    weekday: 'long',
   });
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-pink-50 to-white">
-      <div className="max-w-4xl mx-auto px-6 py-8">
+      <section className="max-w-4xl mx-auto px-6 py-8" aria-labelledby="diary-title">
         {/* Header */}
-        <div className="flex items-center justify-between mb-8">
+        <header className="flex items-center justify-between mb-8">
           <div className="text-center mx-auto">
-            <h2 className="text-pink-600 mb-1">오늘의 일기</h2>
-            <p className="text-sm text-gray-500">{today}</p>
+            <h1 id="diary-title" className="text-pink-600 mb-1 text-xl font-semibold">
+              오늘의 일기
+            </h1>
+            <p className="text-sm text-gray-500" aria-label="오늘 날짜">{today}</p>
           </div>
-        </div>
+        </header>
 
-        {/* Diary Book Design */}
-        <div className="bg-white rounded-2xl shadow-2xl border border-pink-100 overflow-hidden">
-          {/* Book Binding */}
-          <div className="bg-gradient-to-r from-pink-200 to-pink-300 h-4"></div>
-          
-          <div className="p-8">
-            {/* Date Header */}
-            <div className="text-center mb-8 pb-4 border-b border-pink-100">
+        {/* Diary Container */}
+        <article
+          className="bg-white rounded-2xl shadow-2xl border border-pink-100 overflow-hidden"
+          aria-label="일기 작성 폼"
+        >
+          <div className="bg-gradient-to-r from-pink-200 to-pink-300 h-4" role="presentation"></div>
+
+          <form
+            className="p-8"
+            onSubmit={(e) => {
+              e.preventDefault();
+              handleSave();
+            }}
+          >
+            {/* Mood Selector */}
+            <fieldset className="text-center mb-8 pb-4 border-b border-pink-100">
+              <legend className="sr-only">오늘의 기분 선택</legend>
               <div className="inline-flex items-center space-x-4">
-                <span className="text-gray-500">오늘의 기분:</span>
-                <div className="flex space-x-2">
+                <span className="text-gray-500" id="mood-label">
+                  오늘의 기분:
+                </span>
+                <div className="flex space-x-2" role="radiogroup" aria-labelledby="mood-label">
                   {moods.map((moodOption) => (
                     <button
                       key={moodOption.emoji}
+                      type="button"
                       onClick={() => setMood(moodOption.emoji)}
+                      aria-pressed={mood === moodOption.emoji}
+                      aria-label={moodOption.label}
                       className={`p-2 rounded-lg transition-all cursor-pointer ${
                         mood === moodOption.emoji
                           ? 'bg-pink-100 scale-110'
                           : 'hover:bg-pink-50'
                       }`}
-                      title={moodOption.label}
                     >
-                      <span className="text-2xl">{moodOption.emoji}</span>
+                      <span className="text-2xl" aria-hidden="true">
+                        {moodOption.emoji}
+                      </span>
                     </button>
                   ))}
                 </div>
               </div>
-            </div>
+            </fieldset>
 
             {/* Title Input */}
             <div className="mb-6">
+              <label htmlFor="diary-title-input" className="sr-only">
+                제목
+              </label>
               <input
+                id="diary-title-input"
                 type="text"
                 placeholder="오늘의 제목을 입력해주세요..."
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
+                required
                 className="w-full text-xl bg-transparent border-none outline-none placeholder-gray-400 text-gray-800 pb-2 border-b border-pink-200 focus:border-pink-400 transition-colors"
                 style={{ fontFamily: '"Noto Sans KR", sans-serif' }}
               />
@@ -125,8 +147,7 @@ export default function DiaryWrite({ onSave, onBack }: DiaryWriteProps) {
 
             {/* Content Area */}
             <div className="relative">
-              {/* Lines like real diary */}
-              <div className="absolute inset-0 pointer-events-none">
+              <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
                 {Array.from({ length: 20 }, (_, i) => (
                   <div
                     key={i}
@@ -135,8 +156,12 @@ export default function DiaryWrite({ onSave, onBack }: DiaryWriteProps) {
                   ></div>
                 ))}
               </div>
-              
+
+              <label htmlFor="diary-content" className="sr-only">
+                일기 내용
+              </label>
               <textarea
+                id="diary-content"
                 placeholder="오늘 하루는 어떠셨나요? 당신의 여운을 자유롭게 적어보세요..."
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
@@ -146,10 +171,11 @@ export default function DiaryWrite({ onSave, onBack }: DiaryWriteProps) {
                     setContent(prev => prev + '\n\n');
                   }
                 }}
+                required
                 className="relative w-full z-10 min-h-96 bg-transparent border-none resize-none outline-none placeholder-gray-400 text-gray-700 leading-6"
-                style={{ 
+                style={{
                   fontFamily: '"Noto Sans KR", sans-serif',
-                  lineHeight: '1.5rem'
+                  lineHeight: '1.5rem',
                 }}
               />
             </div>
@@ -157,13 +183,17 @@ export default function DiaryWrite({ onSave, onBack }: DiaryWriteProps) {
             {/* Save Button */}
             <div className="flex justify-center mt-8 pt-6 border-t border-pink-100">
               <button
-                onClick={handleSave}
+                type="submit"
                 disabled={isAnalyzing}
                 className="z-0 cursor-pointer bg-gradient-to-r from-pink-400 to-pink-500 hover:from-pink-500 hover:to-pink-600 text-white px-8 py-3 rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isAnalyzing ? (
-                  <span className="flex items-center space-x-2">
-                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                  <span className="flex items-center space-x-2" aria-label="AI 분석 중">
+                    <div
+                      className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"
+                      role="status"
+                      aria-hidden="true"
+                    ></div>
                     <span>AI 분석 중...</span>
                   </span>
                 ) : (
@@ -171,9 +201,9 @@ export default function DiaryWrite({ onSave, onBack }: DiaryWriteProps) {
                 )}
               </button>
             </div>
-          </div>
-        </div>
-      </div>
+          </form>
+        </article>
+      </section>
     </main>
   );
 }
