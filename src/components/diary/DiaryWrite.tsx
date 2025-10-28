@@ -119,7 +119,7 @@ export default function DiaryWrite({ onSave, onBack }: DiaryWriteProps) {
                           : 'hover:bg-pink-50'
                       }`}
                     >
-                      <span className="text-2xl" aria-hidden="true">
+                      <span className="text-2xl sr-only" aria-label={`${moodOption.label} 이모지`}>
                         {moodOption.emoji}
                       </span>
                     </button>
