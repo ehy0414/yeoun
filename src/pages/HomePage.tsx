@@ -74,20 +74,14 @@ export default function HomePage() {
       {currentPage === 'write' && (
         <DiaryWrite
           onSave={handleSaveDiary} 
-          onBack={handleBackToMain}
         />
       )}
       
       {currentPage === 'calendar' && (
         <Calendar
           entries={diaryEntries} 
-          onBack={handleBackToMain}
         />
       )}
-      
-      {/* {currentPage === 'today-writers' && (
-        <TodayWriters onBack={handleBackToMain} />
-      )} */}
     </div>
   );
 }

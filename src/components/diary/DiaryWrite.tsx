@@ -11,10 +11,9 @@ interface DiaryEntry {
 
 interface DiaryWriteProps {
   onSave: (entry: DiaryEntry) => void;
-  onBack: () => void;
 }
 
-export default function DiaryWrite({ onSave, onBack }: DiaryWriteProps) {
+export default function DiaryWrite({ onSave }: DiaryWriteProps) {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [mood, setMood] = useState('😊');
