@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import Header from '../components/layout/header/Header';
 import DiaryWrite from '../components/diary/DiaryWrite';
 import Calendar from '../components/calendar/Calendar';
-import TodayWriters from '../components/today/TodayWriters';
 import Onboarding from '../components/onboarding/Onboarding';
 
 interface DiaryEntry {
@@ -55,10 +54,6 @@ export default function HomePage() {
     setDiaryEntries(prev => [...prev, entry]);
     // Show success message or redirect
     alert('일기가 성공적으로 저장되었습니다! 🎉');
-  };
-
-  const handleBackToMain = () => {
-    setCurrentPage('write');
   };
 
   // If first time, show onboarding
