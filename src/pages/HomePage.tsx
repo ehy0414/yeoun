@@ -22,22 +22,20 @@ export default function HomePage() {
   useEffect(() => {
     const savedEntries = localStorage.getItem('diaryEntries');
     const hasVisited = localStorage.getItem('hasVisited');
-    
+
     if (savedEntries) {
       setDiaryEntries(JSON.parse(savedEntries));
     }
-    
+
     if (hasVisited) {
-      setIsFirstTime(true);
+      setIsFirstTime(false); // ✅ 수정: 기존 true → false (논리 오류 수정)
       setCurrentPage('write');
     }
   }, []);
 
   // Save entries to localStorage whenever diaryEntries changes
   useEffect(() => {
-    if (diaryEntries.length > 0) {
-      localStorage.setItem('diaryEntries', JSON.stringify(diaryEntries));
-    }
+    localStorage.setItem('diaryEntries', JSON.stringify(diaryEntries));
   }, [diaryEntries]);
 
   const handleStartWriting = () => {
@@ -51,32 +49,49 @@ export default function HomePage() {
   };
 
   const handleSaveDiary = (entry: DiaryEntry) => {
-    setDiaryEntries(prev => [...prev, entry]);
-    // Show success message or redirect
+    setDiaryEntries((prev) => [...prev, entry]);
     alert('일기가 성공적으로 저장되었습니다! 🎉');
   };
 
-  // If first time, show onboarding
+  // Onboarding (최초 방문 시)
   if (isFirstTime) {
-    return <Onboarding onStartWriting={handleStartWriting} />;
+    return (
+      <main role="main">
+        <Onboarding onStartWriting={handleStartWriting} />
+      </main>
+    );
   }
 
-  // Main app with header
+  // Main App Layout
   return (
-    <div className="min-h-screen bg-white">
-      <Header currentPage={currentPage} onPageChange={handlePageChange} />
-      
-      {currentPage === 'write' && (
-        <DiaryWrite
-          onSave={handleSaveDiary} 
-        />
-      )}
-      
-      {currentPage === 'calendar' && (
-        <Calendar
-          entries={diaryEntries} 
-        />
-      )}
+    <div className="min-h-screen bg-white text-gray-900">
+      <header role="banner" aria-label="메인 헤더">
+        <Header currentPage={currentPage} onPageChange={handlePageChange} />
+      </header>
+
+      <main role="main" className="p-4" aria-live="polite">
+        {currentPage === 'write' && (
+          <section aria-labelledby="write-section">
+            <h1 id="write-section" className="sr-only">
+              일기 작성 페이지
+            </h1>
+            <DiaryWrite onSave={handleSaveDiary} />
+          </section>
+        )}
+
+        {currentPage === 'calendar' && (
+          <section aria-labelledby="calendar-section">
+            <h1 id="calendar-section" className="sr-only">
+              캘린더 보기 페이지
+            </h1>
+            <Calendar entries={diaryEntries} />
+          </section>
+        )}
+      </main>
+
+      <footer role="contentinfo" className="text-center py-4 text-sm text-gray-500">
+        © 2025 Yeoun App. All rights reserved.
+      </footer>
     </div>
   );
 }
