@@ -28,7 +28,7 @@ export default function HomePage() {
     }
 
     if (hasVisited) {
-      setIsFirstTime(false); // ✅ 수정: 기존 true → false (논리 오류 수정)
+      setIsFirstTime(true);
       setCurrentPage('write');
     }
   }, []);
@@ -39,7 +39,6 @@ export default function HomePage() {
   }, [diaryEntries]);
 
   const handleStartWriting = () => {
-    localStorage.setItem('hasVisited', 'true');
     setIsFirstTime(false);
     setCurrentPage('write');
   };

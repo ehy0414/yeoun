@@ -7,7 +7,7 @@ export default function Onboarding({ onStartWriting }: OnboardingProps) {
     <main className="min-h-screen bg-gradient-to-br from-pink-50 to-white flex items-center justify-center px-6">
       <div className="max-w-2xl mx-auto text-center">
         {/* Hero Image */}
-        <div className="mb-8">
+        <div className="mb-6">
           <img
             src="https://images.unsplash.com/photo-1727195077442-6373fe9e67d5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxkaWFyeSUyMGpvdXJuYWwlMjB3cml0aW5nJTIwdmludGFnZSUyMHBpbmt8ZW58MXx8fHwxNzU5Mjg3NzYyfDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral"
             alt="일기장"
@@ -16,8 +16,8 @@ export default function Onboarding({ onStartWriting }: OnboardingProps) {
         </div>
 
         {/* Main Text */}
-        <div className="mb-12">
-          <h1 className="text-4xl text-gray-800 mb-4">
+        <div className="mb-6">
+          <h1 className="text-4xl text-pink-500 mb-4">
             당신의 여운을 기록해보세요
           </h1>
           <p className="text-lg text-gray-600 mb-2">
@@ -29,7 +29,7 @@ export default function Onboarding({ onStartWriting }: OnboardingProps) {
         </div>
 
         {/* Features */}
-        <div className="grid md:grid-cols-3 gap-6 mb-12">
+        <div className="grid md:grid-cols-3 gap-6 mb-6">
           <div className="bg-white p-6 rounded-xl shadow-md border border-pink-100">
             <div className="text-2xl mb-3">✨</div>
             <h3 className="text-gray-800 mb-2">AI 감정 분석</h3>
