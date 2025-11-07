@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState } from "react";
+import { getGeminiResponse } from "../../services/openaiApi";
 
 interface DiaryEntry {
   id: string;
@@ -14,72 +15,84 @@ interface DiaryWriteProps {
 }
 
 export default function DiaryWrite({ onSave }: DiaryWriteProps) {
-  const [title, setTitle] = useState('');
-  const [content, setContent] = useState('');
-  const [mood, setMood] = useState('😊');
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
+  const [mood, setMood] = useState("😊");
   const [isAnalyzing, setIsAnalyzing] = useState(false);
 
   const moods = [
-    { emoji: '😊', label: '행복' },
-    { emoji: '😢', label: '슬픔' },
-    { emoji: '😌', label: '평온' },
-    { emoji: '😤', label: '화남' },
-    { emoji: '😴', label: '피곤' },
-    { emoji: '🤔', label: '생각' },
-    { emoji: '😍', label: '사랑' },
-    { emoji: '😰', label: '걱정' },
+    { emoji: "😊", label: "행복" },
+    { emoji: "😢", label: "슬픔" },
+    { emoji: "😌", label: "평온" },
+    { emoji: "😤", label: "화남" },
+    { emoji: "😴", label: "피곤" },
+    { emoji: "🤔", label: "생각" },
+    { emoji: "😍", label: "사랑" },
+    { emoji: "😰", label: "걱정" },
   ];
 
   const handleSave = async () => {
     if (!title.trim() || !content.trim()) {
-      alert('제목과 내용을 모두 입력해주세요.');
+      alert("제목과 내용을 모두 입력해주세요.");
       return;
     }
 
     setIsAnalyzing(true);
 
-    // Mock AI analysis
-    await new Promise(resolve => setTimeout(resolve, 2000));
+    try {
+      const aiResponse = await getGeminiResponse(
+        `오늘의 기분은 ${mood}이고, 일기 내용은 다음과 같습니다:\n\n${content}`
+      );
 
-    const mockAnalysis = `오늘의 일기를 분석한 결과, 전반적으로 ${
-      mood === '😊' ? '긍정적인' : mood === '😢' ? '우울한' : '혼재된'
-    } 감정이 느껴집니다. 
-    특히 일상의 소소한 행복을 찾으려는 모습이 인상적이었습니다. 
-    앞으로도 이런 긍정적인 마음가짐을 유지하시길 바랍니다.`;
+      const newEntry: DiaryEntry = {
+        id: Date.now().toString(),
+        date: new Date().toISOString().split("T")[0],
+        title,
+        content,
+        mood,
+        aiAnalysis: aiResponse,
+      };
 
-    const newEntry: DiaryEntry = {
-      id: Date.now().toString(),
-      date: new Date().toISOString().split('T')[0],
-      title,
-      content,
-      mood,
-      aiAnalysis: mockAnalysis,
-    };
+      onSave(newEntry);
+      alert("일기가 성공적으로 저장되었습니다!");
 
-    onSave(newEntry);
-    setIsAnalyzing(false);
-    setTitle('');
-    setContent('');
-    setMood('😊');
+      // 폼 초기화
+      setTitle("");
+      setContent("");
+      setMood("😊");
+    } catch (error) {
+      console.error("Gemini API 오류:", error);
+      alert("AI 분석 중 오류가 발생했습니다. API 키나 네트워크를 확인하세요.");
+    } finally {
+      setIsAnalyzing(false);
+    }
   };
 
-  const today = new Date().toLocaleDateString('ko-KR', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-    weekday: 'long',
+  const today = new Date().toLocaleDateString("ko-KR", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    weekday: "long",
   });
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-pink-50 to-white">
-      <section className="max-w-4xl mx-auto px-6 py-8" aria-labelledby="diary-title">
+      <section
+        className="max-w-4xl mx-auto px-6 py-8"
+        aria-labelledby="diary-title"
+      >
         {/* Header */}
         <header className="flex items-center justify-between mb-8">
           <div className="text-center mx-auto">
-            <h1 id="diary-title" className="text-pink-600 mb-1 text-xl font-semibold">
+            <h1
+              id="diary-title"
+              className="text-pink-600 mb-1 text-xl font-semibold"
+            >
               오늘의 일기
             </h1>
-            <p className="text-sm text-gray-500" aria-label="오늘 날짜">{today}</p>
+            <p className="text-sm text-gray-500" aria-label="오늘 날짜">
+              {today}
+            </p>
           </div>
         </header>
 
@@ -88,7 +101,10 @@ export default function DiaryWrite({ onSave }: DiaryWriteProps) {
           className="bg-white rounded-2xl shadow-2xl border border-pink-100 overflow-hidden"
           aria-label="일기 작성 폼"
         >
-          <div className="bg-gradient-to-r from-pink-200 to-pink-300 h-4" role="presentation"></div>
+          <div
+            className="bg-gradient-to-r from-pink-200 to-pink-300 h-4"
+            role="presentation"
+          ></div>
 
           <form
             className="p-8"
@@ -104,7 +120,11 @@ export default function DiaryWrite({ onSave }: DiaryWriteProps) {
                 <span className="text-gray-500" id="mood-label">
                   오늘의 기분:
                 </span>
-                <div className="flex space-x-2" role="radiogroup" aria-labelledby="mood-label">
+                <div
+                  className="flex space-x-2"
+                  role="radiogroup"
+                  aria-labelledby="mood-label"
+                >
                   {moods.map((moodOption) => (
                     <button
                       key={moodOption.emoji}
@@ -114,11 +134,14 @@ export default function DiaryWrite({ onSave }: DiaryWriteProps) {
                       aria-label={moodOption.label}
                       className={`p-2 rounded-lg transition-all cursor-pointer ${
                         mood === moodOption.emoji
-                          ? 'bg-pink-100 scale-110'
-                          : 'hover:bg-pink-50'
+                          ? "bg-pink-100 scale-110"
+                          : "hover:bg-pink-50"
                       }`}
                     >
-                      <span className="text-2xl" aria-label={`${moodOption.label} 이모지`}>
+                      <span
+                        className="text-2xl"
+                        aria-label={`${moodOption.label} 이모지`}
+                      >
                         {moodOption.emoji}
                       </span>
                     </button>
@@ -146,16 +169,6 @@ export default function DiaryWrite({ onSave }: DiaryWriteProps) {
 
             {/* Content Area */}
             <div className="relative">
-              <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
-                {Array.from({ length: 20 }, (_, i) => (
-                  <div
-                    key={i}
-                    className="border-b border-pink-100 h-6"
-                    style={{ marginTop: i === 0 ? '0' : '1.5rem' }}
-                  ></div>
-                ))}
-              </div>
-
               <label htmlFor="diary-content" className="sr-only">
                 일기 내용
               </label>
@@ -165,16 +178,16 @@ export default function DiaryWrite({ onSave }: DiaryWriteProps) {
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
                 onKeyDown={(e) => {
-                  if (e.key === 'Enter') {
+                  if (e.key === "Enter") {
                     e.preventDefault();
-                    setContent(prev => prev + '\n\n');
+                    setContent((prev) => prev + "\n\n");
                   }
                 }}
                 required
                 className="relative w-full z-10 min-h-96 bg-transparent border-none resize-none outline-none placeholder-gray-400 text-gray-700 leading-6"
                 style={{
                   fontFamily: '"Noto Sans KR", sans-serif',
-                  lineHeight: '1.5rem',
+                  lineHeight: "1.5rem",
                 }}
               />
             </div>
@@ -187,7 +200,10 @@ export default function DiaryWrite({ onSave }: DiaryWriteProps) {
                 className="z-0 cursor-pointer bg-gradient-to-r from-pink-400 to-pink-500 hover:from-pink-500 hover:to-pink-600 text-white px-8 py-3 rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isAnalyzing ? (
-                  <span className="flex items-center space-x-2" aria-label="AI 분석 중">
+                  <span
+                    className="flex items-center space-x-2"
+                    aria-label="AI 분석 중"
+                  >
                     <div
                       className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"
                       role="status"
@@ -196,7 +212,7 @@ export default function DiaryWrite({ onSave }: DiaryWriteProps) {
                     <span>AI 분석 중...</span>
                   </span>
                 ) : (
-                  '일기 저장하기'
+                  "일기 저장하기"
                 )}
               </button>
             </div>
