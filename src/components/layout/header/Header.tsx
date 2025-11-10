@@ -37,6 +37,16 @@ export default function Header({ currentPage, onPageChange }: HeaderProps) {
           >
             캘린더
           </button>
+          <button
+            onClick={() => onPageChange('search')}
+            className={`cursor-pointer px-4 py-2 rounded-lg transition-colors ${
+              currentPage === 'search'
+                ? 'bg-pink-100 text-pink-600'
+                : 'text-gray-600 hover:text-pink-600 hover:bg-pink-50'
+            }`}
+          >
+            검색
+          </button>
         </nav>
 
         {/* Profile */}

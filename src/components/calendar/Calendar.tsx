@@ -6,7 +6,7 @@ interface DiaryEntry {
   title: string;
   content: string;
   mood: string;
-  aiAnalysis?: string;
+  ai_analysis?: string;
 }
 
 interface CalendarProps {
@@ -185,14 +185,15 @@ export default function Calendar({ entries }: CalendarProps) {
                   </p>
                 </section>
 
-                {selectedEntry.aiAnalysis && (
+                {selectedEntry.ai_analysis && (
                   <section>
                     <h4 className="text-sm text-gray-600 mb-2 flex items-center">
                       <span className="mr-2" aria-hidden="true">🤖</span>
                       AI 분석
                     </h4>
-                    <p className="text-gray-700 text-sm leading-relaxed bg-gradient-to-br from-pink-50 to-purple-50 p-3 rounded-lg border border-pink-200">
-                      {selectedEntry.aiAnalysis}
+                    <p className="text-gray-700 text-sm leading-relaxed bg-gradient-to-br from-pink-50 to-purple-50 p-3 rounded-lg border border-pink-200"
+                    dangerouslySetInnerHTML={{ __html: selectedEntry.ai_analysis }}>
+                      
                     </p>
                   </section>
                 )}

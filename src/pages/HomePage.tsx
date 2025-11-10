@@ -3,6 +3,7 @@ import Header from '../components/layout/header/Header';
 import DiaryWrite from '../components/diary/DiaryWrite';
 import Calendar from '../components/calendar/Calendar';
 import Onboarding from '../components/onboarding/Onboarding';
+import { supabase } from '../services/supabaseClient';
 
 interface DiaryEntry {
   id: string;
@@ -18,25 +19,15 @@ export default function HomePage() {
   const [diaryEntries, setDiaryEntries] = useState<DiaryEntry[]>([]);
   const [isFirstTime, setIsFirstTime] = useState(true);
 
-  // Load data from localStorage on component mount
+  // Supabase에서 데이터 불러오기
   useEffect(() => {
-    const savedEntries = localStorage.getItem('diaryEntries');
-    const hasVisited = localStorage.getItem('hasVisited');
-
-    if (savedEntries) {
-      setDiaryEntries(JSON.parse(savedEntries));
-    }
-
-    if (hasVisited) {
-      setIsFirstTime(true);
-      setCurrentPage('write');
-    }
+    const fetchEntries = async () => {
+      const { data, error } = await supabase.from('diary_entries').select('*').order('date', { ascending: false });
+      if (error) console.error('Error fetching entries:', error);
+      else setDiaryEntries(data);
+    };
+    fetchEntries();
   }, []);
-
-  // Save entries to localStorage whenever diaryEntries changes
-  useEffect(() => {
-    localStorage.setItem('diaryEntries', JSON.stringify(diaryEntries));
-  }, [diaryEntries]);
 
   const handleStartWriting = () => {
     setIsFirstTime(false);
@@ -47,12 +38,30 @@ export default function HomePage() {
     setCurrentPage(page);
   };
 
-  const handleSaveDiary = (entry: DiaryEntry) => {
-    setDiaryEntries((prev) => [...prev, entry]);
-    alert('일기가 성공적으로 저장되었습니다! 🎉');
+  // Supabase에 저장
+  const handleSaveDiary = async (entry: DiaryEntry) => {
+    const { error } = await supabase.from('diary_entries').insert([
+      {
+        date: entry.date,
+        title: entry.title,
+        content: entry.content,
+        mood: entry.mood,
+        ai_analysis: entry.aiAnalysis || null,
+      },
+    ]);
+
+    if (error) {
+      alert('저장 중 오류가 발생했습니다');
+      console.error(error);
+    } else {
+      setDiaryEntries((prev) => [...prev, entry]);
+      alert('일기가 성공적으로 저장되었습니다! 🎉');
+      // ai 분석 바로 반영하도록 페이지 새로고침
+      window.location.reload();
+      currentPage === 'calendar' && setCurrentPage('calendar');
+    }
   };
 
-  // Onboarding (최초 방문 시)
   if (isFirstTime) {
     return (
       <main role="main">
@@ -61,7 +70,6 @@ export default function HomePage() {
     );
   }
 
-  // Main App Layout
   return (
     <div className="min-h-screen bg-white text-gray-900">
       <header role="banner" aria-label="메인 헤더">
@@ -84,6 +92,15 @@ export default function HomePage() {
               캘린더 보기 페이지
             </h1>
             <Calendar entries={diaryEntries} />
+          </section>
+        )}
+
+        {currentPage === 'search' && (
+          <section aria-labelledby="search-section">
+            <h1 id="search-section" className="sr-only">
+              검색 페이지
+            </h1>
+            
           </section>
         )}
       </main>
