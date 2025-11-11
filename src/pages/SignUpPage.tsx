@@ -26,23 +26,23 @@ export default function SignUpPage() {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        const { error } = await supabase.from('users').insert([
-            {
+        const { data, error } = await supabase.auth.signUp({
             email: formData.email,
-            name: formData.nickName,
             password: formData.password,
+            options: {
+            data: { name: formData.nickName }, // 프로필 데이터로 저장됨
             },
-        ]);
-    
+        });
+
         if (error) {
-            alert('저장 중 오류가 발생했습니다');
+            alert('회원가입 중 오류가 발생했습니다');
             console.error(error);
         } else {
-            alert('회원가입이 성공적으로 완료되었습니다! 🎉');
-            // ai 분석 바로 반영하도록 페이지 새로고침
+            alert('회원가입이 완료되었습니다! 🎉');
             navigate('/login');
         }
     };
+
 
     return (
         <main className="flex justify-center items-center min-h-screen bg-pink-50">
