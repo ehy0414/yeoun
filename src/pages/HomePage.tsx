@@ -4,6 +4,7 @@ import DiaryWrite from '../components/diary/DiaryWrite';
 import Calendar from '../components/calendar/Calendar';
 import Onboarding from '../components/onboarding/Onboarding';
 import { supabase } from '../services/supabaseClient';
+import Search from '../components/search/Search';
 
 interface DiaryEntry {
   id: string;
@@ -100,7 +101,7 @@ export default function HomePage() {
             <h1 id="search-section" className="sr-only">
               검색 페이지
             </h1>
-            
+            <Search />
           </section>
         )}
       </main>

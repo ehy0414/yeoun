@@ -105,7 +105,7 @@ export default function SignUpPage() {
 
                 <footer className="mt-6 text-sm text-pink-400">
                 이미 계정이 있으신가요?{" "}
-                <a href="/login" className="underline hover:text-pink-500">
+                <a href="/" className="underline hover:text-pink-500">
                     로그인
                 </a>
                 </footer>
