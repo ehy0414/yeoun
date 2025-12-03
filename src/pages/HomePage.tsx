@@ -35,7 +35,7 @@ export default function HomePage() {
   };
 
   const handleSaveDiary = async (entry: DiaryEntry) => {
-    const { error } = await supabase.from('diary_entries').insert([
+    const { data, error } = await supabase.from('diary_entries').insert([
       {
         date: entry.date,
         title: entry.title,
@@ -43,15 +43,16 @@ export default function HomePage() {
         mood: entry.mood,
         ai_analysis: entry.aiAnalysis || null,
       },
-    ]);
+    ])
+      .select();;
 
     if (error) {
       alert('저장 중 오류가 발생했습니다 😢');
       console.error(error);
     } else {
-      setDiaryEntries((prev) => [...prev, entry]);
+      setDiaryEntries((prev) => [...prev, data[0]]);
+      setCurrentPage('calendar');
       alert('일기가 예쁘게 저장되었어요! 🌸');
-      window.location.reload();
     }
   };
 
