@@ -1,4 +1,4 @@
-import { BookHeart, Calendar, Search, PenLine } from "lucide-react"; // 아이콘 추가
+import { BookHeart, Calendar, PenLine } from "lucide-react"; // 아이콘 추가
 
 interface HeaderProps {
   currentPage: string;

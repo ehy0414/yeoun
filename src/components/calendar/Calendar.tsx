@@ -160,7 +160,7 @@ export default function Calendar({ entries }: CalendarProps) {
             </article>
           ) : (
             // Empty State
-            <div className="h-full min-h-[400px] bg-white/40 backdrop-blur-sm rounded-[40px] border border-white/60 flex flex-col items-center justify-center text-center p-8 text-gray-400 border-dashed border-2 border-pink-100">
+            <div className="h-full min-h-[400px] bg-white/40 backdrop-blur-sm rounded-[40px] flex flex-col items-center justify-center text-center p-8 text-gray-400 border-dashed border-2 border-pink-100">
               <div className="w-16 h-16 bg-pink-50 rounded-full flex items-center justify-center mb-4 text-pink-300">
                 <CalendarIcon size={32} />
               </div>
