@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { ChevronLeft, ChevronRight, Calendar as CalendarIcon, MessageCircleHeart } from 'lucide-react';
 
 interface DiaryEntry {
   id: string;
@@ -20,7 +21,7 @@ export default function Calendar({ entries }: CalendarProps) {
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth();
   const today = new Date();
-  
+
   const firstDay = new Date(year, month, 1);
   const lastDay = new Date(year, month + 1, 0);
   const daysInMonth = lastDay.getDate();
@@ -30,11 +31,6 @@ export default function Calendar({ entries }: CalendarProps) {
   for (let i = 0; i < startingDayOfWeek; i++) calendarDays.push(null);
   for (let day = 1; day <= daysInMonth; day++) calendarDays.push(day);
 
-  const hasEntry = (day: number) => {
-    const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-    return entries.some(entry => entry.date === dateStr);
-  };
-
   const getEntry = (day: number) => {
     const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
     return entries.find(entry => entry.date === dateStr);
@@ -43,206 +39,137 @@ export default function Calendar({ entries }: CalendarProps) {
   const previousMonth = () => setCurrentDate(new Date(year, month - 1));
   const nextMonth = () => setCurrentDate(new Date(year, month + 1));
 
-  const monthNames = [
-    '1월', '2월', '3월', '4월', '5월', '6월',
-    '7월', '8월', '9월', '10월', '11월', '12월'
-  ];
-
+  const monthNames = ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'];
   const dayNames = ['일', '월', '화', '수', '목', '금', '토'];
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-pink-50 to-white" role="main">
-      <div className="max-w-6xl mx-auto px-6 py-8">
-        {/* Header */}
-        <header className="flex items-center justify-between mb-8" role="banner">
-          <h1 className="text-2xl mx-auto text-gray-800">일기 캘린더</h1>
-        </header>
+    <div className="max-w-6xl mx-auto px-4 py-8">
+      <section className="grid lg:grid-cols-3 gap-8">
 
-        <section className="grid lg:grid-cols-3 gap-8" aria-label="달력과 일기 상세보기">
-          {/* Calendar */}
-          <section className="lg:col-span-2" aria-label="달력">
-            <div className="p-6 bg-white shadow-lg border border-pink-100">
-              {/* Calendar Header */}
-              <div className="flex items-center justify-between mb-6">
-                <button
-                  onClick={previousMonth}
-                  aria-label="이전 달 보기"
-                  className="border-pink-200 text-pink-600 hover:bg-pink-50 cursor-pointer"
-                >
-                  ←
-                </button>
-                <h2 className="text-xl text-gray-800" id="calendar-title">
-                  <time dateTime={`${year}-${month + 1}`}>{year}년 {monthNames[month]}</time>
-                </h2>
-                <button
-                  onClick={nextMonth}
-                  aria-label="다음 달 보기"
-                  className="border-pink-200 text-pink-600 hover:bg-pink-50 cursor-pointer"
-                >
-                  →
-                </button>
-              </div>
+        {/* 1. Left: Calendar Grid */}
+        <section className="lg:col-span-2 bg-white/60 backdrop-blur-xl rounded-[40px] shadow-[0_20px_50px_-12px_rgba(255,182,193,0.3)] border border-white/60 p-8">
 
-              {/* Day Headers */}
-              <div className="grid grid-cols-7 gap-1 mb-2" role="rowgroup">
-                {dayNames.map(day => (
-                  <div
-                    key={day}
-                    role="columnheader"
-                    className="text-center py-2 text-sm text-gray-600"
-                  >
-                    {day}
-                  </div>
-                ))}
-              </div>
-
-              {/* Calendar Grid */}
-              <div className="grid grid-cols-7 gap-1" role="rowgroup" aria-labelledby="calendar-title">
-                {calendarDays.map((day, index) => (
-                  <button
-                    key={index}
-                    type="button"
-                    role="gridcell"
-                    aria-label={
-                      day
-                        ? `${year}년 ${month + 1}월 ${day}일 ${hasEntry(day) ? '일기 있음' : '일기 없음'}`
-                        : undefined
-                    }
-                    disabled={!day}
-                    className={`
-                      relative aspect-square border border-pink-100 rounded-lg flex flex-col items-center justify-center cursor-pointer transition-all
-                      ${day ? 'hover:bg-pink-50' : ''}
-                      ${day && hasEntry(day) ? 'bg-pink-100 border-pink-300' : ''}
-                      ${day && day === today.getDate() && month === today.getMonth() && year === today.getFullYear() 
-                        ? 'border-pink-500 border-2' : ''}
-                    `}
-                    onClick={() => {
-                      if (day && hasEntry(day)) {
-                        setSelectedEntry(getEntry(day) || null);
-                      }
-                    }}
-                  >
-                    {day && (
-                      <>
-                        <time
-                          dateTime={`${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`}
-                          className={`text-sm ${hasEntry(day) ? 'text-pink-700' : 'text-gray-700'}`}
-                        >
-                          {day}
-                        </time>
-                        {hasEntry(day) && (
-                          <div className="absolute bottom-1" aria-hidden="true">
-                            <span className="text-lg">{getEntry(day)?.mood}</span>
-                          </div>
-                        )}
-                      </>
-                    )}
-                  </button>
-                ))}
-              </div>
-
-              {/* Legend */}
-              <footer className="mt-6 flex items-center justify-center space-x-6 text-sm text-gray-600" role="contentinfo">
-                <div className="flex items-center space-x-2">
-                  <div className="w-4 h-4 border-2 border-pink-500 rounded" aria-hidden="true"></div>
-                  <span>오늘</span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <div className="w-4 h-4 bg-pink-100 border border-pink-300 rounded" aria-hidden="true"></div>
-                  <span>일기 작성됨</span>
-                </div>
-              </footer>
-            </div>
-          </section>
-
-          {/* Entry Details */}
-          <aside className="lg:col-span-1" aria-live="polite">
-            {selectedEntry ? (
-              <article className="p-6 bg-white shadow-lg border border-pink-100" aria-label="선택된 일기 내용">
-                <header className="mb-4">
-                  <div className="flex items-center justify-between mb-2">
-                    <h3 className="text-lg text-gray-800">{selectedEntry.title}</h3>
-                    <span className="text-2xl" aria-hidden="true">{selectedEntry.mood}</span>
-                  </div>
-                  <time
-                    dateTime={selectedEntry.date}
-                    className="text-sm text-gray-500"
-                  >
-                    {new Date(selectedEntry.date).toLocaleDateString('ko-KR', {
-                      year: 'numeric',
-                      month: 'long',
-                      day: 'numeric',
-                      weekday: 'long'
-                    })}
-                  </time>
-                </header>
-
-                <section className="mb-6">
-                  <h4 className="text-sm text-gray-600 mb-2">내용</h4>
-                  <p className="text-gray-700 text-sm leading-relaxed bg-pink-50 p-3 rounded-lg">
-                    {selectedEntry.content.substring(0, 200)}
-                    {selectedEntry.content.length > 200 && '...'}
-                  </p>
-                </section>
-
-                {selectedEntry.ai_analysis && (
-                  <section>
-                    <h4 className="text-sm text-gray-600 mb-2 flex items-center">
-                      <span className="mr-2" aria-hidden="true">🤖</span>
-                      AI 분석
-                    </h4>
-                    <p className="text-gray-700 text-sm leading-relaxed bg-gradient-to-br from-pink-50 to-purple-50 p-3 rounded-lg border border-pink-200"
-                    dangerouslySetInnerHTML={{ __html: selectedEntry.ai_analysis }}>
-                      
-                    </p>
-                  </section>
-                )}
-
-                <button
-                  onClick={() => setSelectedEntry(null)}
-                  className="mt-4 cursor-pointer w-full text-sm text-pink-600 hover:text-pink-700 hover:bg-pink-100 h-10 rounded-2xl transition-colors"
-                  aria-label="일기 상세보기 닫기"
-                >
-                  닫기
-                </button>
-              </article>
-            ) : (
-              <div className="p-6 bg-white shadow-lg border border-pink-100" role="note">
-                <div className="text-center text-gray-500">
-                  <div className="text-4xl mb-4" aria-hidden="true">📅</div>
-                  <p className="text-sm">
-                    일기가 작성된 날짜를 클릭하면<br />
-                    자세한 내용을 볼 수 있어요
-                  </p>
-                </div>
-              </div>
-            )}
-          </aside>
-        </section>
-
-        {/* Stats */}
-        <section className="mt-8 grid md:grid-cols-3 gap-6" aria-label="통계 정보">
-          <div className="p-4 bg-white shadow-lg border border-pink-100 text-center" role="status">
-            <div className="text-2xl text-pink-600 mb-2">{entries.length}</div>
-            <div className="text-sm text-gray-600">총 작성한 일기</div>
+          {/* Month Navigation */}
+          <div className="flex items-center justify-between mb-8">
+            <button onClick={previousMonth} className="p-2 rounded-full hover:bg-pink-100 text-pink-400 transition-colors">
+              <ChevronLeft />
+            </button>
+            <h2 className="text-2xl font-bold text-gray-800">
+              {year}년 <span className="text-pink-500">{monthNames[month]}</span>
+            </h2>
+            <button onClick={nextMonth} className="p-2 rounded-full hover:bg-pink-100 text-pink-400 transition-colors">
+              <ChevronRight />
+            </button>
           </div>
-          <div className="p-4 bg-white shadow-lg border border-pink-100 text-center" role="status">
-            <div className="text-2xl text-pink-600 mb-2">
-              {entries.filter(entry => 
-                new Date(entry.date).getMonth() === month && 
-                new Date(entry.date).getFullYear() === year
-              ).length}
-            </div>
-            <div className="text-sm text-gray-600">이번 달 작성</div>
+
+          {/* Days Header */}
+          <div className="grid grid-cols-7 mb-4">
+            {dayNames.map((day, i) => (
+              <div key={day} className={`text-center text-sm font-bold ${i === 0 ? 'text-rose-400' : 'text-gray-400'}`}>
+                {day}
+              </div>
+            ))}
           </div>
-          <div className="p-4 bg-white shadow-lg border border-pink-100 text-center" role="status">
-            <div className="text-2xl text-pink-600 mb-2">
-              {entries.some(entry => entry.date === today.toISOString().split('T')[0]) ? '✓' : 'X'}
-            </div>
-            <div className="text-sm text-gray-600">오늘 작성 여부</div>
+
+          {/* Days Grid */}
+          <div className="grid grid-cols-7 gap-3 md:gap-4">
+            {calendarDays.map((day, index) => {
+              const entry = day ? getEntry(day) : null;
+              const isToday = day === today.getDate() && month === today.getMonth() && year === today.getFullYear();
+
+              return (
+                <div key={index} className="aspect-square relative">
+                  {day && (
+                    <button
+                      onClick={() => entry && setSelectedEntry(entry)}
+                      className={`
+                        w-full h-full rounded-2xl flex flex-col items-center justify-center transition-all duration-300 border
+                        ${isToday ? 'border-pink-400 bg-pink-50' : 'border-transparent hover:bg-white hover:shadow-md'}
+                        ${entry ? 'bg-white shadow-sm border-pink-100 cursor-pointer hover:-translate-y-1' : 'bg-transparent cursor-default'}
+                      `}
+                    >
+                      <span className={`text-sm font-medium ${isToday ? 'text-pink-600 font-bold' : 'text-gray-600'}`}>
+                        {day}
+                      </span>
+
+                      {/* Mood Emoji Indicator */}
+                      {entry && (
+                        <span className="mt-1 text-2xl animate-fade-in drop-shadow-sm">
+                          {entry.mood}
+                        </span>
+                      )}
+                    </button>
+                  )}
+                </div>
+              );
+            })}
           </div>
         </section>
-      </div>
-    </main>
+
+        {/* 2. Right: Detail View */}
+        <aside className="lg:col-span-1">
+          {selectedEntry ? (
+            <article className="h-full bg-white rounded-[40px] shadow-xl border border-pink-100 p-8 flex flex-col relative overflow-hidden">
+              {/* 배경 데코레이션 */}
+              <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-pink-300 to-rose-400"></div>
+
+              <header className="mb-6">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-sm text-pink-500 font-bold tracking-wider uppercase bg-pink-50 px-2 py-1 rounded-lg">
+                    Diary Detail
+                  </span>
+                  <span className="text-4xl filter drop-shadow-md">{selectedEntry.mood}</span>
+                </div>
+                <h3 className="text-2xl font-bold text-gray-800 leading-tight">{selectedEntry.title}</h3>
+                <time className="text-sm text-gray-400 mt-2 block">
+                  {new Date(selectedEntry.date).toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' })}
+                </time>
+              </header>
+
+              {/* Content Area (Lined Paper Effect) */}
+              <div className="flex-1 overflow-y-auto pr-2 custom-scrollbar mb-6">
+                <p className="text-gray-700 text-lg leading-loose" style={{
+                  backgroundImage: "linear-gradient(transparent 1.9rem, #f3f4f6 1.9rem)",
+                  backgroundSize: "100% 2rem",
+                  lineHeight: "2rem"
+                }}>
+                  {selectedEntry.content}
+                </p>
+              </div>
+
+              {/* AI Analysis Box */}
+              {selectedEntry.ai_analysis && (
+                <div className="bg-gradient-to-br from-pink-50 to-purple-50 rounded-2xl p-5 border border-pink-100/50">
+                  <h4 className="text-sm font-bold text-purple-500 mb-2 flex items-center gap-2">
+                    <MessageCircleHeart size={16} />
+                    AI 마음 분석
+                  </h4>
+                  <p
+                    className="text-sm text-gray-600 leading-relaxed"
+                    dangerouslySetInnerHTML={{ __html: selectedEntry.ai_analysis }}
+                  />
+                </div>
+              )}
+
+              <button
+                onClick={() => setSelectedEntry(null)}
+                className="mt-6 w-full py-3 rounded-xl text-gray-500 hover:bg-gray-100 font-medium transition-colors"
+              >
+                닫기
+              </button>
+            </article>
+          ) : (
+            // Empty State
+            <div className="h-full min-h-[400px] bg-white/40 backdrop-blur-sm rounded-[40px] border border-white/60 flex flex-col items-center justify-center text-center p-8 text-gray-400 border-dashed border-2 border-pink-100">
+              <div className="w-16 h-16 bg-pink-50 rounded-full flex items-center justify-center mb-4 text-pink-300">
+                <CalendarIcon size={32} />
+              </div>
+              <p className="text-lg font-medium text-gray-500 mb-1">일기를 선택해주세요</p>
+              <p className="text-sm">날짜를 클릭하면<br />상세 내용을 볼 수 있어요 🌸</p>
+            </div>
+          )}
+        </aside>
+      </section>
+    </div>
   );
 }
